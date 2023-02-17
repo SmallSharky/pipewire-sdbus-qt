@@ -1,36 +1,19 @@
-// #include <sdbus-c++/IConnection.h>
-// #include <sdbus-c++/ProxyInterfaces.h>
-// #include <sdbus-c++/Types.h>
-// #include <sdbus-c++/sdbus-c++.h>
-#include <stdexcept>
-#include <vector>
-#include <string>
-#include <random>
-#include <iostream>
-#include <thread>
-#include <functional>
-#include <optional>
-#include <future>
-#include <algorithm>
-// #include <unistd.h>
-// #include "portal/Request.hpp"
-// #include "portal/ScreenCast.hpp"
 #include <QCoreApplication>
 #include <QObject>
+#include <algorithm>
+#include <functional>
+#include <future>
+#include <iostream>
+#include <optional>
+#include <random>
+#include <stdexcept>
+#include <string>
+#include <thread>
+#include <vector>
 
 #include "ScreenCastWrapper.hpp"
 
 using namespace std::string_literals;
-
-
-// struct Portal {
-//     static constexpr auto serviceName{"org.freedesktop.portal.Desktop"};
-//     static constexpr auto objectPath{"/org/freedesktop/portal/desktop"};
-//     static constexpr auto interfaceName{"org.freedesktop.portal.ScreenCast"};
-// };
-
-
-
 
 std::string generateRandomString(std::size_t length)
 {
@@ -48,61 +31,6 @@ std::string generateRandomString(std::size_t length)
 
     return randomString;
 }
-
-
-// namespace DBus = sdbus;
-// // using ScreenCast = org::freedesktop::portal::ScreenCast_proxy;
-// using RequestProxy = org::freedesktop::portal::Request_proxy;
-// class Request: public DBus::ProxyInterfaces<RequestProxy> {
-// public:
-//     using Handler = std::function<void(const uint32_t& response, const std::map<std::string, sdbus::Variant>&)>;
-
-// protected:
-//     // std::promise<std::string> p_;
-    
-//     Handler responseHandler_;
-//     virtual void onResponse(const uint32_t& response, const std::map<std::string, sdbus::Variant>& results) {
-//         std::cout << "Received Response signal with response code: " << response << std::endl;
-//         responseHandler_(response, results);
-//             // std::cout << "Response data: " << std::endl;
-//             // for (const auto& p : results)
-//             // {
-//             //     std::cout<<"Entry \"" << p.first << "\"" << std::endl;
-//             //     if (p.first == "session_handle"s)
-//             //     {
-//             //         std::cout<<"handle!"<<std::endl;
-//             //         std::cout << "  session_handle: " << p.second.get<std::string>() << std::endl;
-//             //         p_.set_value(p.second.get<std::string>());
-                    
-//             //     }
-//             // }
-//     }
-
-// public:
-
-//     Request(sdbus::IConnection& conn, const std::string& path, const Handler& h):
-//         ProxyInterfaces(conn, Portal::serviceName, path),
-//         responseHandler_(h)
-//     {
-//         registerProxy();
-//         std::cout<<"Registering request handler on path: " << path << std::endl;
-//     }
-
-//     virtual ~Request(){
-//         unregisterProxy();
-//     }
-
-//     // std::string receiveHandle() {
-//     //     auto fut = p_.get_future();
-//     //     fut.wait();
-//     //     std::cout<<"Wee did!"<<std::endl;
-//     //     return fut.get();
-//     // }
-
-
-
-    
-// };
 
 // using ScreenCastProxy = org::freedesktop::portal::ScreenCast_proxy;
 
