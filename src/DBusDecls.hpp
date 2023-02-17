@@ -1,17 +1,18 @@
 #pragma once
 
-#include <variant>
 #include <map>
 #include <string>
+#include <variant>
 
+namespace sdbus
+{
+class IConnection;
 
-namespace sdbus {
-    class IConnection;
-
-    class Variant;
+class Variant;
 }
 
-namespace DBus {
-    using namespace sdbus;
-    using VariantMap = std::map<std::string, Variant>;
+namespace DBus
+{
+using namespace sdbus;
+using VariantMap = std::map<std::string, Variant>;
 }

@@ -24,8 +24,7 @@ std::string generateRandomString(std::size_t length)
     std::uniform_int_distribution<size_t> distribution(0, alphabet.size() - 1);
 
     std::string randomString;
-    for (std::size_t i = 0; i < length; ++i)
-    {
+    for (std::size_t i = 0; i < length; ++i) {
         randomString += alphabet[distribution(generator)];
     }
 
@@ -40,14 +39,10 @@ std::string generateRandomString(std::size_t length)
 //     DBus::ObjectPath path_;
 //     DBus::ObjectPath registeredAs_;
 
-    
-
 //     uint32_t cursorModes_;
 //     uint32_t sourceTypes_;
 
-
 // public:
-
 
 //     enum class CursorMode: uint32_t {
 //         HIDDEN = 1<<0,
@@ -67,14 +62,11 @@ std::string generateRandomString(std::size_t length)
 //         UNTIL_REVOKED = 2
 //     };
 
-    
-
 //     ScreenCast(const std::string& token = generateRandomString(8)):
 //         ProxyInterfaces(DBus::createSessionBusConnection(), Portal::serviceName, Portal::objectPath),
 //         token_(token)
 //     {
-        
-        
+
 //         registerProxy();
 
 //         std::map<std::string, sdbus::Variant> options;
@@ -110,16 +102,14 @@ std::string generateRandomString(std::size_t length)
 //             auto reqPath = CreateSession(options);
 
 //             std::cout << "Handler for session is: " << reqPath << std::endl;
-            
+
 //             cursorModes_ = AvailableCursorModes();
 //             sourceTypes_ = AvailableSourceTypes();
 //             spf.wait();
 //             path_ = spf.get();
 //             std::cout<<"DONE"<<std::endl;
 //         }
-        
 
-        
 //         {
 //             std::promise<void> sp;
 //             auto spf = sp.get_future();
@@ -130,13 +120,12 @@ std::string generateRandomString(std::size_t length)
 //                 std::cout << "Received results: " << results.size() << std::endl;
 //                 for(auto& vp: results) {
 //                     std::cout<<"Got res: " << vp.first << std::endl;
-//                 } 
+//                 }
 //                 sp.set_value();
 //             }};
 //             selectSources(SourceType::WINDOW, CursorMode::METADATA, PersistMode::UNTIL_EXIT);
 //             spf.wait();
 //         }
-
 
 //         {
 //             std::promise<void> sp;
@@ -147,10 +136,10 @@ std::string generateRandomString(std::size_t length)
 //                 }
 //                 std::cout << "Received results: " << results.size() << std::endl;
 //                 for(auto& vp: results) {
-//                     std::cout<<"Got res: " << vp.first << " | " 
-//                     << (vp.second.containsValueOfType<std::string>() ? vp.second.get<std::string>():""s) 
+//                     std::cout<<"Got res: " << vp.first << " | "
+//                     << (vp.second.containsValueOfType<std::string>() ? vp.second.get<std::string>():""s)
 //                     << std::endl;
-//                 } 
+//                 }
 //                 sp.set_value();
 //             }};
 //             std::map<std::string, sdbus::Variant> options;
@@ -159,8 +148,7 @@ std::string generateRandomString(std::size_t length)
 //             // selectSources(SourceType::MONITOR, CursorMode::METADATA, PersistMode::UNTIL_EXIT);
 //             spf.wait();
 //         }
-        
-        
+
 //     }
 
 //     ~ScreenCast() {
@@ -190,27 +178,24 @@ std::string generateRandomString(std::size_t length)
 
 //     }
 
-
 // };
 
-
-class MyApp: public QObject {
+class MyApp : public QObject
+{
 public:
-    ScreenCastWrapper sc {generateRandomString(8)};
-    MyApp(QObject& parent): QObject(&parent)
+    ScreenCastWrapper sc{generateRandomString(8)};
+    MyApp(QObject &parent)
+        : QObject(&parent)
     {
-
     }
 
-    virtual ~MyApp() {
-
+    virtual ~MyApp()
+    {
     }
 };
 
-
-int main(int argc, char ** argv)
+int main(int argc, char **argv)
 {
-
     QCoreApplication app{argc, argv};
     MyApp a{app};
     // std::this_thread::sleep_for(std::chrono::seconds(10));

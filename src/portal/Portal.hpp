@@ -1,8 +1,6 @@
 #pragma once
 
-
 #include <string>
-
 
 struct Portal {
     static const std::string serviceName;
