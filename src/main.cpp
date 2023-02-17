@@ -1,0 +1,292 @@
+// #include <sdbus-c++/IConnection.h>
+// #include <sdbus-c++/ProxyInterfaces.h>
+// #include <sdbus-c++/Types.h>
+// #include <sdbus-c++/sdbus-c++.h>
+#include <stdexcept>
+#include <vector>
+#include <string>
+#include <random>
+#include <iostream>
+#include <thread>
+#include <functional>
+#include <optional>
+#include <future>
+#include <algorithm>
+// #include <unistd.h>
+// #include "portal/Request.hpp"
+// #include "portal/ScreenCast.hpp"
+#include <QCoreApplication>
+#include <QObject>
+
+#include "ScreenCastWrapper.hpp"
+
+using namespace std::string_literals;
+
+
+// struct Portal {
+//     static constexpr auto serviceName{"org.freedesktop.portal.Desktop"};
+//     static constexpr auto objectPath{"/org/freedesktop/portal/desktop"};
+//     static constexpr auto interfaceName{"org.freedesktop.portal.ScreenCast"};
+// };
+
+
+
+
+std::string generateRandomString(std::size_t length)
+{
+    const std::string alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+    std::random_device rd;
+    std::mt19937 generator(rd());
+    std::uniform_int_distribution<size_t> distribution(0, alphabet.size() - 1);
+
+    std::string randomString;
+    for (std::size_t i = 0; i < length; ++i)
+    {
+        randomString += alphabet[distribution(generator)];
+    }
+
+    return randomString;
+}
+
+
+// namespace DBus = sdbus;
+// // using ScreenCast = org::freedesktop::portal::ScreenCast_proxy;
+// using RequestProxy = org::freedesktop::portal::Request_proxy;
+// class Request: public DBus::ProxyInterfaces<RequestProxy> {
+// public:
+//     using Handler = std::function<void(const uint32_t& response, const std::map<std::string, sdbus::Variant>&)>;
+
+// protected:
+//     // std::promise<std::string> p_;
+    
+//     Handler responseHandler_;
+//     virtual void onResponse(const uint32_t& response, const std::map<std::string, sdbus::Variant>& results) {
+//         std::cout << "Received Response signal with response code: " << response << std::endl;
+//         responseHandler_(response, results);
+//             // std::cout << "Response data: " << std::endl;
+//             // for (const auto& p : results)
+//             // {
+//             //     std::cout<<"Entry \"" << p.first << "\"" << std::endl;
+//             //     if (p.first == "session_handle"s)
+//             //     {
+//             //         std::cout<<"handle!"<<std::endl;
+//             //         std::cout << "  session_handle: " << p.second.get<std::string>() << std::endl;
+//             //         p_.set_value(p.second.get<std::string>());
+                    
+//             //     }
+//             // }
+//     }
+
+// public:
+
+//     Request(sdbus::IConnection& conn, const std::string& path, const Handler& h):
+//         ProxyInterfaces(conn, Portal::serviceName, path),
+//         responseHandler_(h)
+//     {
+//         registerProxy();
+//         std::cout<<"Registering request handler on path: " << path << std::endl;
+//     }
+
+//     virtual ~Request(){
+//         unregisterProxy();
+//     }
+
+//     // std::string receiveHandle() {
+//     //     auto fut = p_.get_future();
+//     //     fut.wait();
+//     //     std::cout<<"Wee did!"<<std::endl;
+//     //     return fut.get();
+//     // }
+
+
+
+    
+// };
+
+// using ScreenCastProxy = org::freedesktop::portal::ScreenCast_proxy;
+
+// class ScreenCast: public DBus::ProxyInterfaces<ScreenCastProxy> {
+// protected:
+//     std::string token_;
+//     DBus::ObjectPath path_;
+//     DBus::ObjectPath registeredAs_;
+
+    
+
+//     uint32_t cursorModes_;
+//     uint32_t sourceTypes_;
+
+
+// public:
+
+
+//     enum class CursorMode: uint32_t {
+//         HIDDEN = 1<<0,
+//         EMBEDDED = 1<<1,
+//         METADATA = 1<<2
+//     };
+
+//     enum class SourceType: uint32_t {
+//         MONITOR = 1<<0,
+//         WINDOW = 1<<1,
+//         VIRTUAL = 1<<2
+//     };
+
+//     enum class PersistMode: uint32_t {
+//         NONE = 0,
+//         UNTIL_EXIT = 1,
+//         UNTIL_REVOKED = 2
+//     };
+
+    
+
+//     ScreenCast(const std::string& token = generateRandomString(8)):
+//         ProxyInterfaces(DBus::createSessionBusConnection(), Portal::serviceName, Portal::objectPath),
+//         token_(token)
+//     {
+        
+        
+//         registerProxy();
+
+//         std::map<std::string, sdbus::Variant> options;
+//         auto cname = getProxy().getConnection().getUniqueName();
+//         std::cout << "Connection name is" << cname << std::endl;
+//         {
+//             auto it = std::remove(cname.begin(), cname.end(), ':');
+//             cname.erase(it, cname.end());
+//             std::replace(cname.begin(), cname.end(), '.', '_');
+//         }
+//         std::string sessionToken = "/org/freedesktop/portal/desktop/session/" + cname + "/" + token;
+//         std::string requestToken = "/org/freedesktop/portal/desktop/request/" + cname + "/" + token;
+//         options["session_handle_token"] = token;
+//         options["handle_token"] = token;
+//         {
+//             std::promise<std::string> sp;
+//             auto spf = sp.get_future();
+//             Request r{getProxy().getConnection(), requestToken, [&](const uint32_t& response, const std::map<std::string, sdbus::Variant>& results){
+//                 std::cout << "Wee recieved";
+//                 if(response) {
+//                     sp.set_exception(nullptr);
+//                 }
+//                 for(auto& vp: results) {
+//                     std::cout<<"Entry \"" << vp.first << "\"" << std::endl;
+//                     if(vp.first == "session_handle"s) {
+//                         sp.set_value(vp.second.get<std::string>());
+//                     }
+//                 }
+//             }};
+
+//             std::cout<<"Request handler created"<<std::endl;
+
+//             auto reqPath = CreateSession(options);
+
+//             std::cout << "Handler for session is: " << reqPath << std::endl;
+            
+//             cursorModes_ = AvailableCursorModes();
+//             sourceTypes_ = AvailableSourceTypes();
+//             spf.wait();
+//             path_ = spf.get();
+//             std::cout<<"DONE"<<std::endl;
+//         }
+        
+
+        
+//         {
+//             std::promise<void> sp;
+//             auto spf = sp.get_future();
+//             Request r{getProxy().getConnection(), requestToken, [&](const uint32_t& response, const std::map<std::string, sdbus::Variant>& results){
+//                 if(response) {
+//                     sp.set_exception(nullptr);
+//                 }
+//                 std::cout << "Received results: " << results.size() << std::endl;
+//                 for(auto& vp: results) {
+//                     std::cout<<"Got res: " << vp.first << std::endl;
+//                 } 
+//                 sp.set_value();
+//             }};
+//             selectSources(SourceType::WINDOW, CursorMode::METADATA, PersistMode::UNTIL_EXIT);
+//             spf.wait();
+//         }
+
+
+//         {
+//             std::promise<void> sp;
+//             auto spf = sp.get_future();
+//             Request r{getProxy().getConnection(), requestToken, [&](const uint32_t& response, const std::map<std::string, sdbus::Variant>& results){
+//                 if(response) {
+//                     sp.set_exception(nullptr);
+//                 }
+//                 std::cout << "Received results: " << results.size() << std::endl;
+//                 for(auto& vp: results) {
+//                     std::cout<<"Got res: " << vp.first << " | " 
+//                     << (vp.second.containsValueOfType<std::string>() ? vp.second.get<std::string>():""s) 
+//                     << std::endl;
+//                 } 
+//                 sp.set_value();
+//             }};
+//             std::map<std::string, sdbus::Variant> options;
+//             options["handle_token"] = token_;
+//             Start(path_, "", options);
+//             // selectSources(SourceType::MONITOR, CursorMode::METADATA, PersistMode::UNTIL_EXIT);
+//             spf.wait();
+//         }
+        
+        
+//     }
+
+//     ~ScreenCast() {
+//         unregisterProxy();
+//     }
+
+//     const auto& getPath() const {
+//         return path_;
+//     }
+
+//     bool cursorModeAvailable(CursorMode mode) {
+//         return cursorModes_ & static_cast<uint32_t>(mode);
+//     }
+
+//     bool sourceTypeAvailable(SourceType type) {
+//         return sourceTypes_ & static_cast<uint32_t>(type);
+//     }
+
+//     void selectSources(SourceType st, CursorMode cm, PersistMode pm) {
+//         std::map<std::string, sdbus::Variant> options;
+//         options["handle_token"] = token_;
+//         options["types"] = static_cast<uint32_t>(st);
+//         options["cursor_mode"] = static_cast<uint32_t>(cm);
+//         options["persist_mode"] = static_cast<uint32_t>(pm);
+//         auto res = SelectSources(path_, options);
+//         std::cout << "SelectSources: " << res << std::endl;
+
+//     }
+
+
+// };
+
+
+class MyApp: public QObject {
+public:
+    ScreenCastWrapper sc {generateRandomString(8)};
+    MyApp(QObject& parent): QObject(&parent)
+    {
+
+    }
+
+    virtual ~MyApp() {
+
+    }
+};
+
+
+int main(int argc, char ** argv)
+{
+
+    QCoreApplication app{argc, argv};
+    MyApp a{app};
+    // std::this_thread::sleep_for(std::chrono::seconds(10));
+    // return app.run();
+
+    return app.exec();
+}
