@@ -1,6 +1,7 @@
 
 #include <algorithm>
 #include <iostream>
+#include <numeric>
 #include <optional>
 #include <sdbus-c++/IConnection.h>
 #include <sdbus-c++/ProxyInterfaces.h>
@@ -8,18 +9,19 @@
 #include <sdbus-c++/sdbus-c++.h>
 #include <stdexcept>
 #include <string>
-// #include <QDebug>
-// #include <QString>
 
 #include "portal/Portal.hpp"
 #include "portal/ScreenCast.hpp"
 
 #include "PortalRequests.hpp"
-#include "ScreenCastWrapper.hpp"
+#include "ScreenCast.hpp"
 
 using ScreenCastProxy = org::freedesktop::portal::ScreenCast_proxy;
 
-class ScreenCastWrapper::PImpl_ : protected DBus::ProxyInterfaces<ScreenCastProxy>
+namespace screencast
+{
+
+class ScreenCast::PImpl_ : protected DBus::ProxyInterfaces<ScreenCastProxy>
 {
 protected:
     const std::string token_;
@@ -75,21 +77,69 @@ public:
 
         auto reqPath = this->CreateSession(options);
 
-        auto res = rs.sessionToken();
+        auto res = rs.wait();
         if (res != sessionToken()) {
-            std::cerr << "Invalid session_handle returned" << std::endl;
+            throw std::runtime_error{"Invalid session_handle returned (\"" + res + "\", expected \"" + sessionToken() + "\")"};
         }
         std::cout << "Created session " << res << std::endl;
     }
+
+    void selectSources(const Config &cfg)
+    {
+        std::cout << __PRETTY_FUNCTION__ << std::endl;
+        std::map<std::string, sdbus::Variant> options;
+        options["handle_token"] = token();
+        options["types"] = std::accumulate(cfg.sources.begin(), cfg.sources.end(), uint32_t(0), [](uint32_t a, SourceType b) {
+            return a | static_cast<uint32_t>(b);
+        });
+        options["cursor_mode"] = static_cast<uint32_t>(cfg.cursor);
+        options["persist_mode"] = static_cast<uint32_t>(cfg.persist);
+        options["multiple"] = cfg.multiple;
+        if (!cfg.restoreToken.empty()) {
+            options["restore_token"] = cfg.restoreToken;
+        }
+
+        RequestSelectSources rs{getProxy().getConnection(), requestToken()};
+
+        this->SelectSources(sessionToken(), options);
+        rs.wait();
+    }
+
+    Streaming start(const std::string &window)
+    {
+        std::cout << __PRETTY_FUNCTION__ << std::endl;
+        std::map<std::string, sdbus::Variant> options;
+        options["handle_token"] = token();
+
+        RequestStart rs{getProxy().getConnection(), requestToken()};
+
+        this->Start(sessionToken(), window, options);
+        return rs.wait();
+    }
 };
 
-ScreenCastWrapper::ScreenCastWrapper(const std::string &token)
+ScreenCast::ScreenCast(const std::string &token)
     : impl_(new PImpl_(token))
 {
     std::cout << __PRETTY_FUNCTION__ << std::endl;
-    impl_->createSession();
 }
 
-ScreenCastWrapper::~ScreenCastWrapper()
+ScreenCast ScreenCast::create(const std::string &token, const Config &cfg)
+{
+    ScreenCast sc{token};
+    auto &impl = *sc.impl_;
+    impl.createSession();
+    impl.selectSources(cfg);
+    return sc;
+}
+
+Streaming ScreenCast::start(const std::string &window)
+{
+    return impl_->start(window);
+}
+
+ScreenCast::~ScreenCast()
 {
 }
+
+} // namespace screencast

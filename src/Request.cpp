@@ -1,4 +1,4 @@
-#include "RequestWrapper.hpp"
+#include "Request.hpp"
 #include "portal/Portal.hpp"
 
 #include <sdbus-c++/IConnection.h>
@@ -13,7 +13,10 @@
 
 using RequestProxy = org::freedesktop::portal::Request_proxy;
 
-class RequestWrapper::PImpl_ : public DBus::ProxyInterfaces<RequestProxy>
+namespace screencast
+{
+
+class Request::PImpl_ : public DBus::ProxyInterfaces<RequestProxy>
 {
 public:
     using Handler = std::function<void(uint32_t, const DBus::VariantMap &)>;
@@ -38,11 +41,13 @@ protected:
     }
 };
 
-RequestWrapper::RequestWrapper(Connection &conn, const std::string &path)
-    : impl_(std::unique_ptr<PImpl_>(new PImpl_(conn, path, std::bind(&RequestWrapper::onResponse, this, std::placeholders::_1, std::placeholders::_2))))
+Request::Request(Connection &conn, const std::string &path)
+    : impl_(std::unique_ptr<PImpl_>(new PImpl_(conn, path, std::bind(&Request::onResponse, this, std::placeholders::_1, std::placeholders::_2))))
 {
 }
 
-RequestWrapper::~RequestWrapper()
+Request::~Request()
 {
 }
+
+} // namespace screencast

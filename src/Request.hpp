@@ -5,7 +5,10 @@
 
 #include "DBusDecls.hpp"
 
-class RequestWrapper
+namespace screencast
+{
+
+class Request
 {
 protected:
     class PImpl_;
@@ -14,6 +17,8 @@ protected:
 
 public:
     using Connection = DBus::IConnection;
-    RequestWrapper(Connection &conn, const std::string &path);
-    virtual ~RequestWrapper();
+    Request(Connection &conn, const std::string &path);
+    virtual ~Request();
 };
+
+} // namespace screencast

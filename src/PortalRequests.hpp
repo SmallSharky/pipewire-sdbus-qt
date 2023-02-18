@@ -1,10 +1,14 @@
 #pragma once
 
-#include "RequestWrapper.hpp"
+#include "Request.hpp"
+#include "Streaming.hpp"
 #include <future>
 #include <string>
 
-class RequestSessionStart : protected RequestWrapper
+namespace screencast
+{
+
+class RequestSessionStart : protected Request
 {
 protected:
     virtual void onResponse(uint32_t code, const DBus::VariantMap &data);
@@ -13,9 +17,44 @@ protected:
     std::future<std::string> f_{p_.get_future()};
 
 public:
-    using Connection = RequestWrapper::Connection;
+    using Connection = Request::Connection;
     RequestSessionStart(Connection &conn, const std::string &path);
 
-    std::string sessionToken();
+    std::string wait();
     virtual ~RequestSessionStart();
 };
+
+class RequestSelectSources : protected Request
+{
+protected:
+    virtual void onResponse(uint32_t code, const DBus::VariantMap &data);
+
+    std::promise<void> p_;
+    std::future<void> f_{p_.get_future()};
+
+public:
+    using Connection = Request::Connection;
+    RequestSelectSources(Connection &conn, const std::string &path);
+
+    void wait();
+    virtual ~RequestSelectSources();
+};
+
+class RequestStart : protected Request
+{
+protected:
+    virtual void onResponse(uint32_t code, const DBus::VariantMap &data);
+
+    std::promise<Streaming> p_;
+    std::future<Streaming> f_{p_.get_future()};
+
+public:
+    using Connection = Request::Connection;
+    RequestStart(Connection &conn, const std::string &path);
+
+    Streaming wait();
+
+    virtual ~RequestStart();
+};
+
+} // namespace screencast

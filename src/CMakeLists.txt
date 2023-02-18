@@ -2,10 +2,10 @@
 add_executable(
     example 
     main.cpp
-    RequestWrapper.hpp
-    RequestWrapper.cpp
-    ScreenCastWrapper.hpp
-    ScreenCastWrapper.cpp
+    Request.hpp
+    Request.cpp
+    ScreenCast.hpp
+    ScreenCast.cpp
     PortalRequests.hpp
     PortalRequests.cpp
 
