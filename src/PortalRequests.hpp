@@ -11,7 +11,7 @@ namespace screencast
 class RequestSessionStart : protected Request
 {
 protected:
-    virtual void onResponse(uint32_t code, const DBus::VariantMap &data);
+    virtual void onResponse(uint32_t code, const DBus::VariantMap &data) final;
 
     std::promise<std::string> p_;
     std::future<std::string> f_{p_.get_future()};
@@ -27,7 +27,7 @@ public:
 class RequestSelectSources : protected Request
 {
 protected:
-    virtual void onResponse(uint32_t code, const DBus::VariantMap &data);
+    virtual void onResponse(uint32_t code, const DBus::VariantMap &data) final;
 
     std::promise<void> p_;
     std::future<void> f_{p_.get_future()};
@@ -43,7 +43,7 @@ public:
 class RequestStart : protected Request
 {
 protected:
-    virtual void onResponse(uint32_t code, const DBus::VariantMap &data);
+    virtual void onResponse(uint32_t code, const DBus::VariantMap &data) final;
 
     std::promise<Streaming> p_;
     std::future<Streaming> f_{p_.get_future()};

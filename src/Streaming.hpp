@@ -1,5 +1,6 @@
 #pragma once
 
+#include <optional>
 #include <string>
 #include <vector>
 
@@ -14,13 +15,13 @@ enum class PersistMode : uint32_t { NONE = 0, UNTIL_EXIT = 1, UNTIL_REVOKED = 2 
 
 struct Stream {
     struct Size {
-        int32_t x;
-        int32_t y;
+        int32_t x{0};
+        int32_t y{0};
     };
 
     uint32_t id;
-    Size size;
-    SourceType sourceType;
+    Size size{};
+    std::optional<SourceType> sourceType{};
 };
 
 struct Streaming {

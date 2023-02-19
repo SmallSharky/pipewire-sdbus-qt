@@ -35,7 +35,7 @@ public:
 
 protected:
     Handler handler_;
-    virtual void onResponse(const uint32_t &code, const DBus::VariantMap &data)
+    virtual void onResponse(const uint32_t &code, const DBus::VariantMap &data) final
     {
         handler_(code, data);
     }

@@ -5,6 +5,27 @@ project(example LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+
+if(DEPS_BUILD)
+SET(FETCHCONTENT_TRY_FIND_PACKAGE_MODE NEVER)
+else()
+SET(FETCHCONTENT_TRY_FIND_PACKAGE_MODE ALWAYS)
+endif()
+set(FETCHCONTENT_QUIET OFF)
+
+Include(FetchContent)
+
+FetchContent_Declare(
+  SDBusCpp
+  GIT_REPOSITORY https://github.com/Kistler-Group/sdbus-cpp
+  GIT_TAG        v1.2.0
+# Figure out how to make it work
+  FIND_PACKAGE_ARGS NAMES SDBusCpp sdbus-c++
+#  OVERRIDE_FIND_PACKAGE
+)
+
+FetchContent_MakeAvailable(SDBusCpp)
+
 # First, find sdbus-c++
 
 set(KF5_MIN_VERSION "5.102.0")
@@ -23,7 +44,7 @@ find_package(${PKG_QT} REQUIRED COMPONENTS Core Widgets Quick)
 
 find_package(KF5 REQUIRED COMPONENTS CoreAddons I18n)
 
-find_package(sdbus-c++ REQUIRED)
+
 find_package(Threads REQUIRED)
 
 
