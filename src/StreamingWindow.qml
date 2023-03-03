@@ -18,13 +18,14 @@ Kirigami.ApplicationWindow
     width: 500
     height: 500
     visible: true
-    property QtObject app
+    // property QtObject app
 
     function addStream(nodeid, displayText, fd) {
         if (fd == null)
             fd = 0;
         rep.model.append({nodeId: nodeid, uuid: "", display: displayText, fd: fd})
     }
+
     function removeStream(nodeid) {
         for(var i=0; i<rep.model.count; ++i) {
             if (rep.model.get(i).nodeId === nodeid) {
@@ -41,13 +42,8 @@ Kirigami.ApplicationWindow
         anchors.fill: parent
 
         Button {
-            text: "Add Virtual Monitor"
-            onClicked: app.createVirtualMonitor()
-        }
-
-        Button {
-            text: "Add Region"
-            onClicked: app.requestSelection()
+            text: "Select source"
+            onClicked: app.selectSource()
         }
 
         Repeater {

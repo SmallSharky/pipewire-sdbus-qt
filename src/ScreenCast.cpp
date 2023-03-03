@@ -116,6 +116,19 @@ public:
         this->Start(sessionToken(), window, options);
         return rs.wait();
     }
+
+    int open()
+    {
+        std::cout << __PRETTY_FUNCTION__ << std::endl;
+        std::map<std::string, sdbus::Variant> options;
+
+        // RequestStart rs{getProxy().getConnection(), requestToken()};
+
+        // this->Start(sessionToken(), window, options);
+        auto res = this->OpenPipeWireRemote(sessionToken(), options);
+        return res.release();
+        // return rs.wait();
+    }
 };
 
 ScreenCast::ScreenCast(const std::string &token)
@@ -137,6 +150,14 @@ Streaming ScreenCast::start(const std::string &window)
 {
     return impl_->start(window);
 }
+
+int ScreenCast::open()
+{
+    return impl_->open();
+}
+
+ScreenCast::ScreenCast(ScreenCast &&) = default;
+ScreenCast &ScreenCast::operator=(ScreenCast &&) = default;
 
 ScreenCast::~ScreenCast()
 {

@@ -33,9 +33,12 @@ public:
     static ScreenCast create(const std::string &token, const Config &cfg);
 
     Streaming start(const std::string &window = "");
+    int open();
 
     ScreenCast(const ScreenCast &) = delete;
-    ScreenCast(ScreenCast &&) = default;
+    ScreenCast(ScreenCast &&);
+    ScreenCast &operator=(ScreenCast &&);
+    ScreenCast &operator=(const ScreenCast &) = delete;
     virtual ~ScreenCast();
 };
 

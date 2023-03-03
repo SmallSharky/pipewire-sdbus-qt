@@ -27,6 +27,8 @@ add_executable(
 
 )
 
+# set_target_properties(example PROPERTIES AUTOMOC TRUE)
+
 # kde_target_enable_exceptions(example)
 
 
