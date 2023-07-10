@@ -1,6 +1,6 @@
-#include "ScreenCast.hpp"
-#include "Streaming.hpp"
-#include "StreamingWindow.hpp"
+#include "gui/StreamingWindow.hpp"
+#include "screencast/ScreenCast.hpp"
+#include "screencast/Streaming.hpp"
 #include <QGuiApplication>
 
 int main(int argc, char **argv)

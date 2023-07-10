@@ -40,9 +40,17 @@ include(ECMQtDeclareLoggingCategory)
 
 set(PKG_QT Qt${QT_MAJOR_VERSION})
 
-find_package(${PKG_QT} REQUIRED COMPONENTS Core Widgets Quick)
+find_package(${PKG_QT} REQUIRED COMPONENTS Core Widgets Quick  Gui QuickControls2)
 
-find_package(KF5 REQUIRED COMPONENTS CoreAddons I18n)
+find_package(KF5 REQUIRED COMPONENTS CoreAddons I18n Kirigami2)
+
+
+find_package(PkgConfig REQUIRED )
+pkg_check_modules(GStreamer REQUIRED IMPORTED_TARGET gstreamer-1.0)
+pkg_check_modules(libva REQUIRED IMPORTED_TARGET libva)
+pkg_check_modules(PipeWire REQUIRED IMPORTED_TARGET libpipewire-0.3)
+
+# find_package(KF5Kirigami2 REQUIRED)
 
 
 find_package(Threads REQUIRED)

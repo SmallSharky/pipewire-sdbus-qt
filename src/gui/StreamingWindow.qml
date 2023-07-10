@@ -4,10 +4,11 @@
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
 
-import QtQuick 2.1
-import QtQuick.Layouts 1.1
-import QtQuick.Controls 2.1
-import org.kde.kirigami 2.15 as Kirigami
+import QtQuick 2.15
+import QtQuick.Controls 2.15
+import QtQuick.Layouts 1.15
+import org.kde.kirigami 2.20 as Kirigami
+
 
 import org.kde.pipewire 0.1 as PipeWire
 import org.kde.pipewire.record 0.1 as PWRec
@@ -18,7 +19,7 @@ Kirigami.ApplicationWindow
     width: 500
     height: 500
     visible: true
-    // property QtObject app
+    title: i18nc("@title:window", "Hello World")
 
     function addStream(nodeid, displayText, fd) {
         if (fd == null)
@@ -37,13 +38,15 @@ Kirigami.ApplicationWindow
 
     signal record(int nodeId, bool capture)
 
-    ColumnLayout {
+    pageStack.initialPage: Kirigami.Page {
         id: pipes
         anchors.fill: parent
 
-        Button {
-            text: "Select source"
-            onClicked: app.selectSource()
+        actions.main: Kirigami.Action {
+            id: addAction
+            icon.name: "list-add"
+            text: i18nc("@action:button", "Select stream")
+            onTriggered: app.selectSource()
         }
 
         Repeater {

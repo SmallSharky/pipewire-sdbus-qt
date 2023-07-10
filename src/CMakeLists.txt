@@ -1,35 +1,41 @@
 
+
+
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+
+add_subdirectory(helpers)
+add_subdirectory(video)
+add_subdirectory(screencast)
+add_subdirectory(gui)
+
+#################################################
+
 add_executable(
-    example
-    main.cpp
-
-    # XDG-portal
-    Request.hpp
-    Request.cpp
-    ScreenCast.hpp
-    ScreenCast.cpp
-    PortalRequests.hpp
-    PortalRequests.cpp
-    Helpers.hpp
-    Helpers.cpp
-
-    # Generated code for sdbus-cpp
-    portal/Portal.hpp
-    portal/Portal.cpp
-    portal/Request.hpp
-    portal/ScreenCast.hpp
-
-    # GUI
-    StreamingWindow.hpp
-    StreamingWindow.cpp
-
-    example.qrc
-
+    example-gui
+    example_gui.cpp
 )
 
-# set_target_properties(example PROPERTIES AUTOMOC TRUE)
+target_link_libraries(
+    example-gui 
+    PRIVATE
+    gui video helpers screencast
+    sdbus-c++ 
+    Threads::Threads 
+    ${PKG_QT}::Gui
+)
 
-# kde_target_enable_exceptions(example)
+#################################################
 
+add_executable(
+    example-pipewire
+    example_pipewire.cpp
+)
 
-target_link_libraries(example PRIVATE sdbus-c++ Threads::Threads ${PKG_QT}::Core ${PKG_QT}::Quick)
+target_link_libraries(
+    example-pipewire
+    PRIVATE
+    gui video helpers screencast
+    sdbus-c++ 
+    Threads::Threads 
+    ${PKG_QT}::Gui ${PKG_QT}::Widgets
+)

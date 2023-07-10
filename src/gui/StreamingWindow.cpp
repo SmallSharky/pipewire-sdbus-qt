@@ -1,8 +1,8 @@
 
 
 #include "StreamingWindow.hpp"
-#include "Helpers.hpp"
-#include "ScreenCast.hpp"
+#include "helpers/Strings.hpp"
+#include "screencast/ScreenCast.hpp"
 
 #include <QDebug>
 #include <QLoggingCategory>
@@ -11,6 +11,9 @@
 #include <QQmlContext>
 #include <QString>
 #include <QTimer>
+
+#include <KLocalizedContext>
+#include <KLocalizedString>
 
 namespace gui
 {
@@ -28,6 +31,9 @@ public:
         : QObject(&parent)
         , qmlEng_(new QQmlApplicationEngine(this))
     {
+        KLocalizedString::setApplicationDomain("app");
+        qmlEng_->rootContext()->setContextObject(new KLocalizedContext(qmlEng_));
+
         qmlEng_->rootContext()->setContextProperty(QStringLiteral("app"), this);
         qmlEng_->load(QUrl(QStringLiteral("qrc:/StreamingWindow.qml")));
     }

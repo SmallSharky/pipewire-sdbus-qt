@@ -19,7 +19,7 @@ protected:
 
 public:
     struct Config {
-        CursorMode cursor{CursorMode::METADATA};
+        CursorMode cursor{CursorMode::EMBEDDED};
         PersistMode persist{PersistMode::NONE};
         std::vector<SourceType> sources{SourceType::MONITOR, SourceType::WINDOW};
         bool multiple{false};
