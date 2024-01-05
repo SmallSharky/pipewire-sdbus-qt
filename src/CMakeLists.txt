@@ -16,11 +16,11 @@ add_executable(
 )
 
 target_link_libraries(
-    example-gui 
+    example-gui
     PRIVATE
     gui video helpers screencast
-    sdbus-c++ 
-    Threads::Threads 
+    sdbus-c++
+    Threads::Threads
     ${PKG_QT}::Gui
 )
 
@@ -35,7 +35,24 @@ target_link_libraries(
     example-pipewire
     PRIVATE
     gui video helpers screencast
-    sdbus-c++ 
-    Threads::Threads 
+    sdbus-c++
+    Threads::Threads
+    ${PKG_QT}::Gui ${PKG_QT}::Widgets
+)
+
+#################################################
+
+add_executable(
+    example-gst
+    example_gst.cpp
+)
+
+target_link_libraries(
+    example-gst
+    PRIVATE
+    gui video helpers screencast
+    sdbus-c++
+    Threads::Threads
+    PkgConfig::GStreamer PkgConfig::PipeWire
     ${PKG_QT}::Gui ${PKG_QT}::Widgets
 )
